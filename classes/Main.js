@@ -6,14 +6,22 @@ const FS = require('fs'),
 
 const ts = new TurndownService()
 
+const { CHECK_ENDPOINT } = require('../CONSTANTS')
+
 class Main {
-  constructor() {
-    this.init()
+  constructor(link = '') {
+    this.error = {}
+    this.link = link
   }
 
-  init() {
+  async init() {
+    console.log('init')
     if (!this.folderExists('data')) {
       this.createFolder('data')
+    }
+
+    if (this.link) {
+      await this.makeRequest(`${this.link}${CHECK_ENDPOINT}`)
     }
   }
 
@@ -84,10 +92,13 @@ class Main {
   }
 
   async makeRequest(url, responseType = 'text') {
+    this.link = url
     console.log('request to', url)
     return axios({
       url,
       responseType,
+    }).catch((err) => {
+      this.error = { status: err.response.status, link: this.link }
     })
   }
 }

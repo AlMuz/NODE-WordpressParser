@@ -5,7 +5,7 @@ class Category extends Main {
   folder = 'data/categories/'
 
   constructor(link) {
-    super()
+    super(link)
     this.categories = []
     this.requestUrl = link + CATEGORIES
     this.total = 0
@@ -15,6 +15,7 @@ class Category extends Main {
     this.checkFolder()
 
     const response = await this.makeRequest(this.requestUrl)
+    const that = this
     // this.total = response.headers['x-wp-total']
     this.total = 300
     const pages = Math.ceil(this.total / 100)
@@ -31,8 +32,16 @@ class Category extends Main {
         requests.push(`${this.requestUrl}${options}`)
       }
 
-      requests.map((link) => () => this.makeRequest(link)).reduce( this.reducer, Promise.resolve() )
-      console.log(requests)
+      await requests
+        .map((link) => () => this.operateMoreData(link, that))
+        .reduce(this.reducer, Promise.resolve())
+        .then(() => {
+          console.log(this.categories)
+          console.log('categories');
+        })
+      // const data =  requests.map((link) => () => this.makeRequest(link))
+      // data.reduce( this.reducer, Promise.resolve() )
+      // console.log(data)
     } else {
       const options = this.encodeQueryData({
         per_page: this.total,
@@ -55,6 +64,15 @@ class Category extends Main {
       this.deleteFolder(this.folder)
       this.createFolder(this.folder)
     }
+  }
+
+  operateMoreData(link, that) {
+    new Promise(async (resolve, reject) => {
+      const response = await this.makeRequest(link)
+      that.categories = [...response.data]
+      console.log(that);
+      resolve()
+    })
   }
 
   transformData(data) {
