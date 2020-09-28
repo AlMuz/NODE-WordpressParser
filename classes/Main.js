@@ -26,8 +26,6 @@ class Main {
   }
 
   reducer(promiseChain, fn) {
-    console.log('pc', promiseChain)
-    console.log('FN', fn)
     return promiseChain.then(() => fn())
   }
 
@@ -89,6 +87,15 @@ class Main {
 
   deleteFolder(folderName) {
     return FS.rmdirSync(folderName, { recursive: true })
+  }
+
+  checkFolder(folder) {
+    if (!this.folderExists(folder)) {
+      this.createFolder(folder)
+    } else {
+      this.deleteFolder(folder)
+      this.createFolder(folder)
+    }
   }
 
   async makeRequest(url, responseType = 'text') {

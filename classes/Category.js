@@ -12,17 +12,21 @@ class Category extends Main {
   }
 
   async loadCategories() {
-    this.checkFolder()
+    this.checkFolder(this.folder)
 
     const response = await this.makeRequest(this.requestUrl)
-    const that = this
-    // this.total = response.headers['x-wp-total']
-    this.total = 300
+
+    this.total = response.headers['x-wp-total']
     const pages = Math.ceil(this.total / 100)
 
+    // if there are categories count smaller or equals ten - transforming and saving data
     if (this.total <= 10) {
       this.transformData(response.data)
+
+      // if more
     } else if (this.total > 100) {
+
+      // making request array
       const requests = []
       for (let index = 1; index <= pages; index++) {
         const options = this.encodeQueryData({
@@ -32,16 +36,16 @@ class Category extends Main {
         requests.push(`${this.requestUrl}${options}`)
       }
 
+      const that = this
+      // executing requests array one after each other
       await requests
-        .map((link) => () => this.operateMoreData(link, that))
+        .map((link) => async() => await this.operateMoreData(link, that))
         .reduce(this.reducer, Promise.resolve())
-        .then(() => {
-          console.log(this.categories)
-          console.log('categories');
-        })
-      // const data =  requests.map((link) => () => this.makeRequest(link))
-      // data.reduce( this.reducer, Promise.resolve() )
-      // console.log(data)
+
+      // transforming and saving data
+      this.transformData(this.categories)
+
+      // else adding total categories count as per_page
     } else {
       const options = this.encodeQueryData({
         per_page: this.total,
@@ -50,6 +54,7 @@ class Category extends Main {
       this.transformData(response.data)
     }
 
+    // saving data
     this.saveData(
       'categories.json',
       this.folder,
@@ -57,27 +62,19 @@ class Category extends Main {
     )
   }
 
-  checkFolder() {
-    if (!this.folderExists(this.folder)) {
-      this.createFolder(this.folder)
-    } else {
-      this.deleteFolder(this.folder)
-      this.createFolder(this.folder)
-    }
-  }
-
-  operateMoreData(link, that) {
-    new Promise(async (resolve, reject) => {
+  async operateMoreData(link, that) {
+    await new Promise(async (resolve, reject) => {
       const response = await this.makeRequest(link)
       that.categories = [...response.data]
-      console.log(that);
       resolve()
     })
   }
 
+  // getting correct object properties
   transformData(data) {
     this.categories = data.map((element) => {
       const newElement = {}
+      newElement.id = element.id
       newElement.name = element.name
       newElement.slug = element.slug
       newElement.parent = element.parent
