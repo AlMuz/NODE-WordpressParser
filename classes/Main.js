@@ -98,6 +98,38 @@ class Main {
     }
   }
 
+  async loadData(folder, url, fn) {
+    this.checkFolder(folder)
+    const response = await this.makeRequest(url)
+    const total = response.headers['x-wp-total']
+    const pages = Math.ceil(total / 100)
+
+    console.log('TOTAL', total)
+    if (total > 100) {
+      // making request array
+      const requests = []
+      for (let index = 1; index <= pages; index++) {
+        const options = this.encodeQueryData({
+          per_page: 100,
+          offset: 100 * (index - 1),
+        })
+        requests.push(`${url}${options}`)
+      }
+
+      // executing requests array one after each other
+      return await requests
+        .map((link) => async () => await fn(link, this))
+        .reduce(this.reducer, Promise.resolve())
+    } else if (total > 10 && total <= 100) {
+      const options = this.encodeQueryData({
+        per_page: total,
+      })
+      return await this.makeRequest(`${url}${options}`)
+    } else {
+      return response.data
+    }
+  }
+
   async makeRequest(url, responseType = 'text') {
     this.link = url
     console.log('request to', url)
