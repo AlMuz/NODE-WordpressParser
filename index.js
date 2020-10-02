@@ -6,4 +6,10 @@ const link = 'https://creditprime.md/'
   await category.init()
   if (category.error.status) return console.log('JSON answers with 404')
   await category.loadCategories()
+
+  const page = new Page(link)
+  await page.loadPages()
+
+  // console.log(page);
+
 })()
