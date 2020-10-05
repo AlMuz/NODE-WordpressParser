@@ -124,7 +124,10 @@ class Main {
       const options = this.encodeQueryData({
         per_page: total,
       })
-      return await this.makeRequest(`${url}${options}`)
+
+      const response = await this.makeRequest(`${url}${options}`)
+
+      return response.data
     } else {
       return response.data
     }

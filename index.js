@@ -10,6 +10,6 @@ const link = 'https://creditprime.md/'
   const page = new Page(link)
   await page.loadPages()
 
-  // console.log(page);
-
+  const post = new Post(link)
+  await post.loadPosts()
 })()

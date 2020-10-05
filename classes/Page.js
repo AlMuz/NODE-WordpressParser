@@ -41,11 +41,9 @@ class Page extends Main {
       newElement.name = element.title.rendered
       newElement.slug = element.slug
       newElement.link = element.link
-      newElement.categories = element.categories
       newElement.parent = element.parent
       newElement.template = element.template
       newElement.attachments = element['wp:attachment']
-      newElement.description = element.description
       return newElement
     })
   }
