@@ -11,6 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.20.0",
+    "cac": "^6.6.1",
+    "chalk": "^4.1.0",
+    "clear": "^0.1.0",
+    "figlet": "^1.5.0",
+    "inquirer": "^7.3.3",
     "mime-types": "^2.1.27",
     "turndown": "^6.0.0"
   }
