@@ -140,7 +140,8 @@ class Main {
       url,
       responseType,
     }).catch((err) => {
-      this.error = { status: err.response.status, link: this.link }
+      const status = err.response ? err.response.status : 404
+      this.error = { status, link: this.link }
     })
   }
 }

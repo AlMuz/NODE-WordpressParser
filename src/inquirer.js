@@ -9,7 +9,7 @@ module.exports = {
       message: 'Enter link to the website which need to parse',
       validate: function (value) {
         if (!value.length) return 'Please enter link'
-        if (!isValidUrl) return 'Please enter valid link'
+        if (!isValidUrl(value)) return 'Please enter valid link'
         return true
       },
     })

@@ -1,12 +1,17 @@
 module.exports = {
   isValidUrl: (string) => {
-    console.log('is valid');
-    try {
-      console.log(new URL(string));
-    } catch (_) {
-      return false
-    }
+    return /^(?:(ftp|http|https)?:\/\/)?(?:[\w-]+\.)+([a-z]|[A-Z]|[0-9]){2,6}?(?:\/)?$/gi.test(
+      string
+    )
+  },
+  transformUrl: (url) => {
+    url = url.toLowerCase()
 
-    return true
+    // checking for / on the end
+    if (url.substr(url.length - 1) !== '/') url += '/'
+
+    // adding http to the start of the url
+    if (!url.includes('https://') && !url.includes('http://')) url = `http://${url}`
+    return url
   },
 }
