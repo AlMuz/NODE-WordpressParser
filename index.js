@@ -1,5 +1,5 @@
-// const { Category, Page, Post } = require('./classes/index')
-const clear = require('clear'),
+const { Category, Page, Post } = require('./src/classes/index'),
+  clear = require('clear'),
   chalk = require('chalk'),
   figlet = require('figlet'),
   inquirer = require('./src/inquirer')
@@ -16,14 +16,15 @@ console.log(
 
   const { content } = await inquirer.getContentToDownload()
   console.log(content)
-  //   const category = new Category(link)
-  //   await category.init()
-  //   if (category.error.status) return console.log('JSON answers with 404')
-  //   await category.loadCategories()
 
-  //   const page = new Page(link)
-  //   await page.loadPages()
+  // const category = new Category(website)
+  // await category.init()
+  // if (category.error.status) return console.log('JSON answers with 404')
+  // await category.loadCategories()
 
-  //   const post = new Post(link)
-  //   await post.loadPosts()
+  // const page = new Page(website)
+  // await page.loadPages()
+
+  // const post = new Post(website)
+  // await post.loadPosts()
 })()
