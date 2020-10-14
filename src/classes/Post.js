@@ -19,6 +19,8 @@ class Post extends Main {
         this.operateMoreData
       )) || this.posts
 
+    if (!data) return
+
     this.posts = this.transformData(data)
 
     // saving data

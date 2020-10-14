@@ -18,6 +18,8 @@ class Category extends Main {
         this.operateMoreData
       )) || this.categories
 
+    if (!data) return
+
     this.categories = this.transformData(data)
 
     // saving data

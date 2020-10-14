@@ -101,6 +101,9 @@ class Main {
   async loadData(folder, url, fn) {
     this.checkFolder(folder)
     const response = await this.makeRequest(url)
+
+    if (this.error.status) return []
+
     const total = response.headers['x-wp-total']
     const pages = Math.ceil(total / 100)
 

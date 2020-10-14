@@ -19,6 +19,8 @@ class Page extends Main {
         this.operateMoreData
       )) || this.pages
 
+    if (!data) return
+
     this.pages = this.transformData(data)
 
     // saving data
