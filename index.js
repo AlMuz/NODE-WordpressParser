@@ -1,26 +1,17 @@
 const { Category, Page, Post } = require('./src/classes/index'),
-  { transformUrl } = require('./src/utils'),
-  clear = require('clear'),
-  chalk = require('chalk'),
-  figlet = require('figlet'),
-  inquirer = require('./src/inquirer')
+  inquirer = require('./src/utils/inquirer'),
+  { initTerminal, clearTerminal, logData } = require('./src/utils/output')
 
-clear()
+clearTerminal()
 
-console.log(
-  chalk.yellow(figlet.textSync('NODE WP PARSER', { horizontalLayout: 'full' }))
-)
+initTerminal()
 ;(async () => {
   // getting WP page link
-  let { website } = await inquirer.getWPPageLink()
-
-  // getting normal URL with http and / on the end
-  website = transformUrl(website)
+  let website = await inquirer.getWPPageLink()
 
   const category = new Category(website)
   await category.init()
-  if (category.error.status)
-    return console.log(chalk.red('JSON answers with 404'))
+  if (category.error.status) return logData('JSON answers with 404', 'red')
 
   await category.loadCategories()
 
