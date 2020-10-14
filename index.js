@@ -10,7 +10,8 @@ initTerminal()
   let website = await inquirer.getWPPageLink()
 
   const category = new Category(website)
-  await category.init()
+  category.init()
+  await category.testRequest()
   if (category.error.status) return logData('JSON answers with 404', 'red')
 
   await category.loadCategories()

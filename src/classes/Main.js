@@ -7,22 +7,28 @@ const FS = require('fs'),
 const ts = new TurndownService()
 
 const { CHECK_ENDPOINT } = require('../CONSTANTS')
+const { getHost } = require('../utils')
 
 class Main {
   constructor(link = '') {
     this.error = {}
     this.link = link
+    this.folderName = getHost(link)
   }
 
-  async init() {
+  init() {
     console.log('init')
     if (!this.folderExists('data')) {
       this.createFolder('data')
     }
 
-    if (this.link) {
-      await this.makeRequest(`${this.link}${CHECK_ENDPOINT}`)
+    if (!this.folderExists(`data/${this.folderName}`)) {
+      this.createFolder(`data/${this.folderName}`)
     }
+  }
+
+  async testRequest() {
+    await this.makeRequest(`${this.link}${CHECK_ENDPOINT}`)
   }
 
   reducer(promiseChain, fn) {

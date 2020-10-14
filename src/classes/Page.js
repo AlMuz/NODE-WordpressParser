@@ -3,12 +3,11 @@ const { Main } = require('./Main')
 const { PAGES } = require('../CONSTANTS')
 
 class Page extends Main {
-  folder = 'data/pages/'
-
   constructor(link) {
-    super()
+    super(link)
     this.pages = []
     this.requestUrl = link + PAGES
+    this.folder = `data/${this.folderName}/pages/`
   }
 
   async loadPages() {

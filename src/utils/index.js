@@ -14,4 +14,8 @@ module.exports = {
     if (!url.includes('https://') && !url.includes('http://')) url = `http://${url}`
     return url
   },
+  getHost: (url) => {
+    const urlData = new URL(url)
+    return urlData.host
+  }
 }

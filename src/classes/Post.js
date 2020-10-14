@@ -3,12 +3,11 @@ const { Main } = require('./Main')
 const { POSTS } = require('../CONSTANTS')
 
 class Post extends Main {
-  folder = 'data/posts/'
-
   constructor(link) {
-    super()
+    super(link)
     this.posts = []
     this.requestUrl = link + POSTS
+    this.folder = `data/${this.folderName}/posts/`
   }
 
   async loadPosts() {
