@@ -3,12 +3,11 @@ const { Main } = require('./Main')
 const { POSTS } = require('../CONSTANTS')
 
 class Post extends Main {
-  folder = 'data/posts/'
-
   constructor(link) {
-    super()
+    super(link)
     this.posts = []
     this.requestUrl = link + POSTS
+    this.folder = `data/${this.folderName}/posts/`
   }
 
   async loadPosts() {
@@ -18,6 +17,8 @@ class Post extends Main {
         this.requestUrl,
         this.operateMoreData
       )) || this.posts
+
+    if (!data) return
 
     this.posts = this.transformData(data)
 
@@ -45,6 +46,22 @@ class Post extends Main {
       newElement.template = element.template
       newElement.attachments = element['wp:attachment']
       return newElement
+    })
+  }
+
+  async markdownData() {
+    const mdFolder = `${this.folder}/md/`
+    this.checkFolder(mdFolder)
+
+    this.posts.forEach((element) => {
+      const fileName = `${element.slug}.md`
+      let md = '--- \n'
+      md += `title: '${element.name}' \n`
+      md += `date: ${element.date} \n`
+      md += `description: '${element.description}' \n`
+      md += `link: ${element.link} \n`
+      md += `--- \n`
+      this.operateMarkdown(md, element.content, fileName, mdFolder)
     })
   }
 }

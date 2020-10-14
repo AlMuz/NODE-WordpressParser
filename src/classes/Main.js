@@ -7,22 +7,28 @@ const FS = require('fs'),
 const ts = new TurndownService()
 
 const { CHECK_ENDPOINT } = require('../CONSTANTS')
+const { getHost } = require('../utils')
 
 class Main {
   constructor(link = '') {
     this.error = {}
     this.link = link
+    this.folderName = getHost(link)
   }
 
-  async init() {
+  init() {
     console.log('init')
     if (!this.folderExists('data')) {
       this.createFolder('data')
     }
 
-    if (this.link) {
-      await this.makeRequest(`${this.link}${CHECK_ENDPOINT}`)
+    if (!this.folderExists(`data/${this.folderName}`)) {
+      this.createFolder(`data/${this.folderName}`)
     }
+  }
+
+  async testRequest() {
+    await this.makeRequest(`${this.link}${CHECK_ENDPOINT}`)
   }
 
   reducer(promiseChain, fn) {
@@ -51,6 +57,11 @@ class Main {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  operateMarkdown(md, content, file, path) {
+    md += ts.turndown(content)
+    this.saveData(file, path, md)
   }
 
   saveData(file, path, data) {
@@ -101,6 +112,9 @@ class Main {
   async loadData(folder, url, fn) {
     this.checkFolder(folder)
     const response = await this.makeRequest(url)
+
+    if (this.error.status) return []
+
     const total = response.headers['x-wp-total']
     const pages = Math.ceil(total / 100)
 
@@ -140,7 +154,8 @@ class Main {
       url,
       responseType,
     }).catch((err) => {
-      this.error = { status: err.response.status, link: this.link }
+      const status = err.response ? err.response.status : 404
+      this.error = { status, link: this.link }
     })
   }
 }

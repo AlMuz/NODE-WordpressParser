@@ -2,12 +2,11 @@ const { Main } = require('./Main')
 const { CATEGORIES } = require('../CONSTANTS')
 
 class Category extends Main {
-  folder = 'data/categories/'
-
   constructor(link) {
     super(link)
     this.categories = []
     this.requestUrl = link + CATEGORIES
+    this.folder = `data/${this.folderName}/categories/`
   }
 
   async loadCategories() {
@@ -17,6 +16,8 @@ class Category extends Main {
         this.requestUrl,
         this.operateMoreData
       )) || this.categories
+
+    if (!data) return
 
     this.categories = this.transformData(data)
 
