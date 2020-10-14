@@ -59,6 +59,11 @@ class Main {
     }
   }
 
+  operateMarkdown(md, content, file, path) {
+    md += ts.turndown(content)
+    this.saveData(file, path, md)
+  }
+
   saveData(file, path, data) {
     try {
       FS.writeFile(`${path}${file}`, data, 'utf8', () => {})

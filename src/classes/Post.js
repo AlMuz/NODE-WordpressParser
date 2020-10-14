@@ -48,6 +48,22 @@ class Post extends Main {
       return newElement
     })
   }
+
+  async markdownData() {
+    const mdFolder = `${this.folder}/md/`
+    this.checkFolder(mdFolder)
+
+    this.posts.forEach((element) => {
+      const fileName = `${element.slug}.md`
+      let md = '--- \n'
+      md += `title: '${element.name}' \n`
+      md += `date: ${element.date} \n`
+      md += `description: '${element.description}' \n`
+      md += `link: ${element.link} \n`
+      md += `--- \n`
+      this.operateMarkdown(md, element.content, fileName, mdFolder)
+    })
+  }
 }
 
 module.exports = { Post }

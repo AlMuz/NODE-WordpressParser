@@ -31,4 +31,13 @@ module.exports = {
       },
     })
   },
+  confirmData: (text) => {
+    return inquirer
+      .prompt({
+        name: 'confirm',
+        type: 'confirm',
+        message: text,
+      })
+      .then(({ confirm }) => confirm)
+  },
 }

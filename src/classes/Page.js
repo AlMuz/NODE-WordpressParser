@@ -48,6 +48,20 @@ class Page extends Main {
       return newElement
     })
   }
+
+  async markdownData() {
+    const mdFolder = `${this.folder}/md/`
+    this.checkFolder(mdFolder)
+
+    this.pages.forEach((element) => {
+      const fileName = `${element.slug}.md`
+      let md = '--- \n'
+      md += `title: '${element.name}' \n`
+      md += `date: ${element.date} \n`
+      md += `--- \n`
+      this.operateMarkdown(md, element.content, fileName, mdFolder)
+    })
+  }
 }
 
 module.exports = { Page }

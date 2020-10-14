@@ -25,6 +25,11 @@ initTerminal()
     await post.loadPosts()
     if (post.error.status)
       logData('Posts route not found and not downloaded', 'red')
+    else {
+      if (await inquirer.confirmData('Save all posts as MD?')) {
+        post.markdownData()
+      }
+    }
   }
 
   if (content.includes('Pages')) {
@@ -32,5 +37,10 @@ initTerminal()
     await page.loadPages()
     if (page.error.status)
       logData('Pages route not found and not downloaded', 'red')
+    else {
+      if (await inquirer.confirmData('Save all posts as MD?')) {
+        page.markdownData()
+      }
+    }
   }
 })()
