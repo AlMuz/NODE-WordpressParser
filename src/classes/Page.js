@@ -44,7 +44,6 @@ class Page extends Main {
       newElement.link = element.link
       newElement.parent = element.parent
       newElement.template = element.template
-      newElement.attachments = element['wp:attachment']
       return newElement
     })
   }
@@ -57,7 +56,9 @@ class Page extends Main {
       const fileName = `${element.slug}.md`
       let md = '--- \n'
       md += `title: '${element.name}' \n`
+      md += `description: '${element.description}' \n`
       md += `date: ${element.date} \n`
+      md += `slug: ${element.slug} \n`
       md += `--- \n`
       this.operateMarkdown(md, element.content, fileName, mdFolder)
     })

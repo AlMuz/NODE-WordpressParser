@@ -44,7 +44,6 @@ class Post extends Main {
       newElement.link = element.link
       newElement.categories = element.categories
       newElement.template = element.template
-      newElement.attachments = element['wp:attachment']
       return newElement
     })
   }
@@ -56,10 +55,13 @@ class Post extends Main {
     this.posts.forEach((element) => {
       const fileName = `${element.slug}.md`
       let md = '--- \n'
+      md += `id: '${element.id}' \n`
       md += `title: '${element.name}' \n`
-      md += `date: ${element.date} \n`
       md += `description: '${element.description}' \n`
+      md += `slug: ${element.slug} \n`
+      md += `date: ${element.date} \n`
       md += `link: ${element.link} \n`
+      md += `categories: [${element.categories.join(' ,')}] \n`
       md += `--- \n`
       this.operateMarkdown(md, element.content, fileName, mdFolder)
     })
