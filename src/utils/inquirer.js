@@ -24,7 +24,7 @@ module.exports = {
       name: 'content',
       type: 'checkbox',
       message: 'Select content which will be downloaded',
-      choices: ['Posts', 'Pages'],
+      choices: ['Posts', 'Pages', 'Media'],
       validate: function (array) {
         if (!array.length) return 'Please select at least one option'
         return true

@@ -1,4 +1,4 @@
-const { Category, Page, Post } = require('./src/classes/index'),
+const { Category, Page, Post, Media } = require('./src/classes/index'),
   inquirer = require('./src/utils/inquirer'),
   { initTerminal, clearTerminal, logData } = require('./src/utils/output')
 
@@ -26,9 +26,8 @@ initTerminal()
     if (post.error.status)
       logData('Posts route not found and not downloaded', 'red')
     else {
-      if (await inquirer.confirmData('Save all posts as MD?')) {
+      if (await inquirer.confirmData('Save all posts as Markdown?'))
         post.markdownData()
-      }
     }
   }
 
@@ -38,9 +37,17 @@ initTerminal()
     if (page.error.status)
       logData('Pages route not found and not downloaded', 'red')
     else {
-      if (await inquirer.confirmData('Save all posts as MD?')) {
+      if (await inquirer.confirmData('Save all posts as Markdown?'))
         page.markdownData()
-      }
     }
   }
+
+  if (content.includes('Media')) {
+    const media = new Media(website)
+    await media.loadMedia()
+    if (media.error.status)
+      logData('Media route not found and not files downloaded', 'red')
+  }
+
+  logData('The end.', 'green')
 })()

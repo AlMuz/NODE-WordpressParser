@@ -6,8 +6,9 @@ const FS = require('fs'),
 
 const ts = new TurndownService()
 
-const { CHECK_ENDPOINT } = require('../CONSTANTS')
-const { getHost } = require('../utils')
+const { CHECK_ENDPOINT } = require('../CONSTANTS'),
+  { getHost } = require('../utils'),
+  { logData } = require('../utils/output')
 
 class Main {
   constructor(link = '') {
@@ -17,7 +18,7 @@ class Main {
   }
 
   init() {
-    console.log('Parser initialization')
+    logData('Parser initialization', 'green')
     if (!this.folderExists('data')) {
       this.createFolder('data')
     }
@@ -35,27 +36,26 @@ class Main {
     return promiseChain.then(() => fn())
   }
 
-  async saveImage(url, slug) {
+  async saveFile(link, type, name, folder) {
+    const extension = mime.extension(type)
+    const fileName = `${name}.${extension}`
+
     try {
-      const response = await axios.get(url)
+      console.log(`Downloading file - ${fileName}`)
 
-      response.data.forEach(async (element) => {
-        const extension = mime.extension(element.mime_type)
-        const link = element.source_url
-        console.log(`${slug}.${extension}`)
-        const path = PATH.resolve(__dirname, 'images', `${slug}.${extension}`)
-        const writer = FS.createWriteStream(path)
+      const path = PATH.resolve(folder, fileName)
+      const writer = FS.createWriteStream(path)
 
-        const response = await axios({
-          url: link,
-          method: 'GET',
-          responseType: 'stream',
-        })
-
-        response.data.pipe(writer)
+      const response = await axios({
+        url: link,
+        method: 'GET',
+        responseType: 'stream',
       })
+
+      response.data.pipe(writer)
     } catch (error) {
-      console.error(error)
+      logData(`File ${fileName} has error - ${error.response.status}`, 'red')
+      return Promise.resolve()
     }
   }
 
@@ -117,7 +117,11 @@ class Main {
     const total = response.headers['x-wp-total']
     const pages = Math.ceil(total / 100)
 
-    console.log(`Total pages for ${this.constructor.name}`, total)
+    logData(
+      `Total content elements for ${this.constructor.name} - ${total}`,
+      'green'
+    )
+
     if (total > 100) {
       // making request array
       const requests = []
