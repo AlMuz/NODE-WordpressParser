@@ -17,7 +17,7 @@ class Main {
   }
 
   init() {
-    console.log('init')
+    console.log('Parser initialization')
     if (!this.folderExists('data')) {
       this.createFolder('data')
     }
@@ -114,11 +114,10 @@ class Main {
     const response = await this.makeRequest(url)
 
     if (this.error.status) return []
-
     const total = response.headers['x-wp-total']
     const pages = Math.ceil(total / 100)
 
-    console.log('TOTAL', total)
+    console.log(`Total pages for ${this.constructor.name}`, total)
     if (total > 100) {
       // making request array
       const requests = []
@@ -149,7 +148,7 @@ class Main {
 
   async makeRequest(url, responseType = 'text') {
     this.link = url
-    console.log('request to', url)
+    console.log('Making request to', url)
     return axios({
       url,
       responseType,
